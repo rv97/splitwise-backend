@@ -1,2 +1,8 @@
-import { User } from '@prisma/client';
-export type LoginUserDto = Pick<User, 'email' | 'password'>;
+import { ApiProperty } from '@nestjs/swagger';
+export class LoginUserDto {
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  password: string;
+}

@@ -15,7 +15,7 @@ model User {
   email String @unique
   name String
   password String
-  phone Int?
+  phone String?
   expenses Expense[]
   dueSplits Split[]
   createdAt DateTime @default(now())

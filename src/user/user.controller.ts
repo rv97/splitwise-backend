@@ -16,6 +16,7 @@ import { User } from '@prisma/client';
 import { IAuthPayload } from '../auth/types/IAuthPayload';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -31,6 +32,7 @@ export class UserController {
     return this.userService.loginUser(loginUserDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtGuard)
   @Get('profile')
   getProfile(@Request() req) {
