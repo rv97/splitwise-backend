@@ -5,10 +5,11 @@ import {
   Patch,
   UseGuards,
   Request,
+  Get,
 } from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { SettleExpenseDto } from './dto/settle-expense.dto';
 
@@ -21,6 +22,12 @@ export class ExpenseController {
   @Post()
   createExpense(@Body() createExpenseDto: CreateExpenseDto, @Request() req) {
     return this.expenseService.createExpense(createExpenseDto, req.user.email);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('stats')
+  getStats(@Request() req) {
+    return this.expenseService.getStats(req.user.email);
   }
 
   @UseGuards(JwtGuard)

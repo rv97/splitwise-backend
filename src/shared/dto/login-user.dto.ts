@@ -5,9 +5,6 @@ export class LoginUserDto {
   @ApiProperty()
   email: string;
 
-  @MinLength(7, {
-    message: 'Password should be minimum of 7 characters',
-  })
   @ApiProperty()
   password: string;
 }

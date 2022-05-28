@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/services/prisma.service';
+import { PrismaService } from 'src/server/services/prisma.service';
+import { IStatsResult } from 'src/shared/types/IStatsResult';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { SettleExpenseDto } from './dto/settle-expense.dto';
 
@@ -73,5 +74,46 @@ export class ExpenseService {
         isSettled: false,
       },
     });
+  }
+
+  async getStats(email: string) {
+    const result: IStatsResult = {
+      owedByMe: 0.0,
+      owedToMe: 0.0,
+    };
+    result.owedByMe = (
+      await this.prisma.split.findMany({
+        where: {
+          user: {
+            email,
+          },
+        },
+      })
+    ).reduce((currAmt, oSplit) => {
+      return currAmt + oSplit.shareAmount;
+    }, 0.0);
+
+    result.owedToMe = (
+      await this.prisma.expense.findMany({
+        where: {
+          createdBy: {
+            email,
+          },
+        },
+        include: {
+          splits: {
+            where: {
+              isSettled: false,
+            },
+          },
+        },
+      })
+    )
+      .map((x) => x.splits)
+      .flat()
+      .reduce((currAmt, oSplit) => {
+        return currAmt + oSplit.shareAmount;
+      }, 0.0);
+    return result;
   }
 }

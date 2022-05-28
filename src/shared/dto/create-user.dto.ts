@@ -11,9 +11,6 @@ export class CreateUserDto {
   @ApiProperty()
   name: string;
 
-  @MinLength(7, {
-    message: 'Password should be minimum of 7 characters',
-  })
   @ApiProperty()
   password: string;
 

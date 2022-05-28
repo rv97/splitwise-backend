@@ -7,10 +7,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '../../shared/dto/create-user.dto';
 import { IAuthPayload } from '../auth/types/IAuthPayload';
-import { LoginUserDto } from './dto/login-user.dto';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { LoginUserDto } from '../../shared/dto/login-user.dto';
+import { JwtGuard } from 'src/server/auth/guards/jwt.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
