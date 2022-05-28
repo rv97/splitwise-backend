@@ -21,7 +21,8 @@
     "start": "node ./dist/server/main.js",
     "start:next": "next dev",
     "start:dev": "nest start --path ./tsconfig.server.json --watch",
-    "start:debug": "nest start --path ./tsconfig.server.json --debug --watch"
+    "start:debug": "nest start --path ./tsconfig.server.json --debug --watch",
+    "migrate": "npx prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
