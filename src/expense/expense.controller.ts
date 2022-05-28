@@ -1,19 +1,16 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
-  Param,
-  Delete,
   UseGuards,
   Request,
 } from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
-import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { SettleExpenseDto } from './dto/settle-expense.dto';
 
 @ApiBearerAuth()
 @Controller('expense')
@@ -22,27 +19,25 @@ export class ExpenseController {
 
   @UseGuards(JwtGuard)
   @Post()
-  create(@Body() createExpenseDto: CreateExpenseDto, @Request() req) {
+  createExpense(@Body() createExpenseDto: CreateExpenseDto, @Request() req) {
     return this.expenseService.createExpense(createExpenseDto, req.user.email);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.expenseService.findAll();
-  // }
+  @UseGuards(JwtGuard)
+  @Patch('settleExense')
+  settleExpense(@Body() settleExpenseDto: SettleExpenseDto, @Request() req) {
+    return this.expenseService.settleExpense(settleExpenseDto, req.user.email);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.expenseService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateExpenseDto: UpdateExpenseDto) {
-  //   return this.expenseService.update(+id, updateExpenseDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.expenseService.remove(+id);
-  // }
+  @UseGuards(JwtGuard)
+  @Patch('cancelSettleExpense')
+  cancelSettleExpense(
+    @Body() settleExpenseDto: SettleExpenseDto,
+    @Request() req,
+  ) {
+    return this.expenseService.cancelSettleExpense(
+      settleExpenseDto,
+      req.user.email,
+    );
+  }
 }

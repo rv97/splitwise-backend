@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { PrismaService } from 'src/services/prisma.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
-import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { SettleExpenseDto } from './dto/settle-expense.dto';
 
 @Injectable()
 export class ExpenseService {
   constructor(private prisma: PrismaService) {}
   async createExpense(createExpenseDto: CreateExpenseDto, email: string) {
+    const perUserAmount =
+      createExpenseDto.amount / (createExpenseDto.connectedUsers.length + 1);
     return this.prisma.expense.create({
       data: {
         name: createExpenseDto.name,
@@ -18,23 +19,59 @@ export class ExpenseService {
             email,
           },
         },
+        splits: {
+          create: createExpenseDto.connectedUsers.map((connectedUserEmail) => {
+            return {
+              user: {
+                connect: {
+                  email: connectedUserEmail,
+                },
+              },
+              isSettled: false,
+              shareAmount: perUserAmount,
+              sharePercentage: (perUserAmount / createExpenseDto.amount) * 100,
+            };
+          }),
+        },
       },
     });
   }
 
-  // findAll() {
-  //   return `This action returns all expense`;
-  // }
+  async settleExpense(settleExpenseDto: SettleExpenseDto, email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    return this.prisma.split.update({
+      where: {
+        expenseId_userId: {
+          expenseId: settleExpenseDto.expenseId,
+          userId: user.id,
+        },
+      },
+      data: {
+        isSettled: true,
+      },
+    });
+  }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} expense`;
-  // }
-
-  // update(id: number, updateExpenseDto: UpdateExpenseDto) {
-  //   return `This action updates a #${id} expense`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} expense`;
-  // }
+  async cancelSettleExpense(settleExpenseDto: SettleExpenseDto, email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    return this.prisma.split.update({
+      where: {
+        expenseId_userId: {
+          expenseId: settleExpenseDto.expenseId,
+          userId: user.id,
+        },
+      },
+      data: {
+        isSettled: false,
+      },
+    });
+  }
 }
