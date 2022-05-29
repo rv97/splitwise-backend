@@ -116,4 +116,50 @@ export class ExpenseService {
       }, 0.0);
     return result;
   }
+
+  async getExpenseList(email: string) {
+    return this.prisma.expense.findMany({
+      where: {
+        createdBy: {
+          email,
+        },
+      },
+    });
+  }
+
+  async getExpense(expenseId: number) {
+    return this.prisma.expense.findUnique({
+      where: {
+        id: expenseId,
+      },
+      include: {
+        splits: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getOwedByMe(email: string) {
+    return this.prisma.split.findMany({
+      where: {
+        user: {
+          email,
+        },
+      },
+      include: {
+        expense: {
+          select: {
+            createdBy: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }

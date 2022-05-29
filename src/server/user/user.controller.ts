@@ -33,4 +33,11 @@ export class UserController {
   getProfile(@Request() req) {
     return this.userService.findUser(req.user.email);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  @Get('all')
+  getAllUsers(@Request() req) {
+    return this.userService.getAllUsersEmail(req.user.email);
+  }
 }

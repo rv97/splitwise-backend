@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { LoginUserDto } from 'src/shared/dto/login-user.dto';
+import { Box, Button, TextField, Typography } from '@mui/material';
 
 const Signup: FC = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const Signup: FC = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     axios
-      .post('/user/login', loginData)
+      .post('/api/user/login', loginData)
       .then((res) => {
         localStorage.setItem('token', res.data.accessToken);
         router.replace('/');
@@ -26,23 +27,32 @@ const Signup: FC = () => {
   return (
     <div>
       <form onSubmit={handleFormSubmit}>
-        <label>Email</label>
-        <input
-          type="email"
-          value={loginData.email}
-          onChange={(e) =>
-            setLoginData({ ...loginData, email: e.target.value })
-          }
-        />
-        <label>Password</label>
-        <input
-          type="password"
-          value={loginData.password}
-          onChange={(e) =>
-            setLoginData({ ...loginData, password: e.target.value })
-          }
-        />
-        <button type="submit"> Login </button>
+        <Typography variant="h4" component="div" gutterBottom>
+          Sign In
+        </Typography>
+        <Box style={{ margin: 10, padding: 5 }}>
+          <TextField
+            required
+            id="login-email"
+            label="Email"
+            value={loginData.email}
+            onChange={(e) =>
+              setLoginData({ ...loginData, email: e.target.value })
+            }
+          />
+          <TextField
+            id="login-password"
+            label="Password"
+            type="password"
+            value={loginData.password}
+            onChange={(e) =>
+              setLoginData({ ...loginData, password: e.target.value })
+            }
+          />
+        </Box>
+        <Button variant="outlined" type="submit">
+          Login
+        </Button>
       </form>
       <p>
         Don't have an account ? <Link href="/signup"> Signup </Link>

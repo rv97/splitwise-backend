@@ -6,6 +6,8 @@ import {
   UseGuards,
   Request,
   Get,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
@@ -46,5 +48,23 @@ export class ExpenseController {
       settleExpenseDto,
       req.user.email,
     );
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('all')
+  getExpenseList(@Request() req) {
+    return this.expenseService.getExpenseList(req.user.email);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('mydebt')
+  getOwedByMe(@Request() req) {
+    return this.expenseService.getOwedByMe(req.user.email);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get(':id')
+  getExpense(@Param('id', ParseIntPipe) id: number) {
+    return this.expenseService.getExpense(id);
   }
 }

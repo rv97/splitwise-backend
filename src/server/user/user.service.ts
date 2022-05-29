@@ -60,4 +60,13 @@ export class UserService {
       },
     });
   }
+
+  async getAllUsersEmail(email: string) {
+    const userEmails = await this.prisma.user.findMany({
+      select: {
+        email: true,
+      },
+    });
+    return userEmails.filter((x) => x.email !== email);
+  }
 }
