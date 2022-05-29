@@ -16,17 +16,9 @@ $ docker-compose up dev
 ## Swagger Documentation
 
 To see all the endpoints of the application, go to this link.
+All the endpoints except the signup and login are protected using Bearer token. Generate the token first by signing up or logging in and then authorize using that token for other endpoints.
 ```http
   http://localhost:3000/swagger
-```
-
-## Prisma
-
-To see the db as a GUI, run this command.
-
-```bash
-# development
-$ npx prisma studio
 ```
 
 ## Functions
