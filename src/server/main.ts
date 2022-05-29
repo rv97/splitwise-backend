@@ -3,6 +3,9 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import { RequestMethod, ValidationPipe } from '@nestjs/common';
+import { UserModule } from './user/user.module';
+import { ExpenseModule } from './expense/expense.module';
+import { AuthModule } from './auth/auth.module';
 
 async function bootstrap() {
   dotenv.config();
@@ -22,7 +25,9 @@ async function bootstrap() {
     .addTag('splitwise')
     .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    include: [AuthModule, UserModule, ExpenseModule],
+  });
   SwaggerModule.setup('swagger', app, document);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
