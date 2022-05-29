@@ -3,6 +3,7 @@ import axios from 'axios';
 import { CreateUserDto } from 'src/shared/dto/create-user.dto';
 import { useRouter } from 'next/router';
 import { Typography, Box, TextField, Button } from '@mui/material';
+import Link from 'next/link';
 
 const Signup: FC = () => {
   const router = useRouter();
@@ -71,6 +72,9 @@ const Signup: FC = () => {
           Signup
         </Button>
       </form>
+      <Typography variant="body1" component="div" gutterBottom>
+        Already have an account ? <Link href="/login"> Login </Link>
+      </Typography>
     </div>
   );
 };

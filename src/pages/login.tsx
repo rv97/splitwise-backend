@@ -54,9 +54,9 @@ const Signup: FC = () => {
           Login
         </Button>
       </form>
-      <p>
+      <Typography variant="body1" component="div" gutterBottom>
         Don't have an account ? <Link href="/signup"> Signup </Link>
-      </p>
+      </Typography>
     </div>
   );
 };
