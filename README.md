@@ -12,6 +12,14 @@ Splitwise Application using [Nest.js](https://github.com/nestjs/nest), [Next.js]
 # development
 $ docker-compose up dev
 ```
+or
+```bash
+$ npm install
+$ npm run start:dev
+```
+```http
+http://localhost:3000/signup
+```
 
 ## Swagger Documentation
 
